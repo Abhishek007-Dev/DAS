@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="ne">
+<head>
+  <meta charset="UTF-8">
+  <title>Borrower Details</title>
+ <link rel="stylesheet" href="../../assets/bootstrap/css/bootstrap.min.css">
+  <link rel="stylesheet" href="../../assets/bootstrap-icons/bootstrap-icons.css">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Noto Sans Devanagari', sans-serif;
+    }
+
+
+    @font-face {
+    font-family: 'Preeti';
+    src: url('../../assets/fonts/Preeti.otf') format('truetype');
+     font-size: 20px;
+    padding: 8px;
+  }
+
+  .preeti-font {
+    font-family: 'Preeti', sans-serif;
+  }
+    .form-step { display: none; }
+    .form-step.active { display: block; }
+    .nav-tabs .nav-link.active {
+      background-color: #0d6efd;
+      color: white;
+    }
+    .input-group-text { min-width: 120px; }
+    .form-control, .form-select { min-height: 38px; }
+    table th, table td { vertical-align: middle !important; }
+    .modal-content {
+      background: linear-gradient(135deg, #e0f7fa, #f1f8e9);
+    }
+    label { font-weight: 500; }
+  </style>
+</head>
+<body>
+<div class="container mt-5">
+  <div class="card">
+    <div class="card-header d-flex justify-content-between align-items-center">
+      <h5 class="mb-0"><i class="bi bi-people-fill me-2"></i>Borrower Details</h5>
+      <button class="btn btn-outline-primary btn-sm" data-bs-toggle="modal" data-bs-target="#borrowerModal">
+        <i class="bi bi-plus-lg"></i> Add Borrower
+      </button>
+    </div>
+    <div class="card-body">
+      <div id="emptySection" class="text-center text-muted">No borrower added yet.</div>
+      <div id="summarySection" class="d-none">
+        <table class="table table-bordered table-striped">
+          <thead class="table-light">
+            <tr>
+              <th>पूरा नाम</th>
+              <th>नागरिकता नम्बर</th>
+              <th>लिङ्ग</th>
+              <th>बुवाको नाम</th>
+              <th>कार्यहरू</th>
+            </tr>
+          </thead>
+          <tbody id="summaryTableBody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Multi-Step Modal -->
+<div class="modal fade" id="borrowerModal" tabindex="-1" aria-labelledby="borrowerModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-xl modal-dialog-scrollable">
+    <div class="modal-content">
+      <form id="borrowerForm">
+        <div class="modal-header">
+          <h5 class="modal-title" id="borrowerModalLabel">Borrower Form</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <ul class="nav nav-tabs mb-3" id="formTabs">
+            <li class="nav-item"><a class="nav-link active" href="#" data-step="0">Personal Info</a></li>
+            <li class="nav-item"><a class="nav-link" href="#" data-step="1">Address</a></li>
+            <li class="nav-item"><a class="nav-link" href="#" data-step="2">Family</a></li>
+          </ul>
+
+          <!-- Step 1: Personal Info -->
+          <div class="form-step active">
+            <div class="row g-3">
+              <div class="col-md-4">
+                <label>पूरा नाम</label>
+                <input type="text" name="fullName" class="form-control preeti-font" required>
+              </div>
+              <div class="col-md-4">
+                <label>जन्म मिति (वि.सं.)</label>
+                <input type="date" id="dob_bs" class="form-control "required>
+                </div>
+                <div class="col-md-4">
+                <label>DOB (A.D.)</label>
+                <input type="date" name="dob" id="dob_ad" class="form-control " required>
+                </div>
+              <div class="col-md-4">
+                <label>लिङ्ग</label>
+                <select name="gender" class="form-select" required>
+                  <option value="">Select</option>
+                  <option>Male</option>
+                  <option>Female</option>
+                  <option>Other</option>
+                </select>
+              </div>
+              <div class="col-md-4">
+                <label>वैवाहिक स्थिति</label>
+                <select name="status" id="status" class="form-select preeti-font" required>
+                  <option value="">Select</option>
+                  <option>Single</option>
+                  <option>Married</option>
+                </select>
+              </div>
+              <div class="col-md-4">
+                <label>नागरिकता नम्बर</label>
+                <input type="text" name="citizenshipNo" class="form-control preeti-font" required>
+              </div>
+              <div class="col-md-4">
+                <label>नागरिकता जारी मिति</label>
+                <input type="date" name="issueDate" class="form-control preeti-font" required>
+              </div>
+              <div class="col-md-4">
+                <label>जारी गर्ने निकाय</label>
+                <input type="text" name="issueAuthority" class="form-control preeti-font" required>
+              </div>
+              <div class="col-md-4">
+                <label>जारी जिल्ला</label>
+                <input type="text" name="issueDistrict" class="form-control preeti-font" required>
+              </div>
+            </div>
+          </div>
+
+          <!-- Step 2: Address -->
+          <div class="form-step">
+            <h6>स्थायी ठेगाना</h6>
+            <div class="row g-3">
+              <div class="col-md-4"><label>देश</label><input type="text" name="p_country" class="form-control" required></div>
+              <div class="col-md-4"><label>प्रदेश</label><input type="text" name="p_province" class="form-control" required></div>
+              <div class="col-md-4"><label>जिल्ला</label><input type="text" name="p_district" class="form-control" required></div>
+              <div class="col-md-4"><label>नगरपालिका/गा.वि.स.</label><input type="text" name="p_municipality" class="form-control" required></div>
+              <div class="col-md-2"><label>वडा नं.</label><input type="text" name="p_ward" class="form-control" required></div>
+              <div class="col-md-3"><label>गाउँ</label><input type="text" name="p_town" class="form-control preeti-font"></div>
+              <div class="col-md-3"><label>टोल</label><input type="text" name="p_tole" class="form-control preeti-font"></div>
+              <div class="col-md-3"><label>सडक नं.</label><input type="text" name="p_street" class="form-control"></div>
+            </div>
+
+            <div class="form-check form-switch mt-3">
+              <input class="form-check-input" type="checkbox" id="copyAddress">
+              <label class="form-check-label" for="copyAddress">अस्थायी ठेगाना स्थायी ठेगाना जस्तै हो</label>
+            </div>
+
+            <h6 class="mt-3">अस्थायी ठेगाना</h6>
+            <div class="row g-3">
+              <div class="col-md-4"><label>देश</label><input type="text" name="t_country" class="form-control" required></div>
+              <div class="col-md-4"><label>प्रदेश</label><input type="text" name="t_province" class="form-control" required></div>
+              <div class="col-md-4"><label>जिल्ला</label><input type="text" name="t_district" class="form-control" required></div>
+              <div class="col-md-4"><label>नगरपालिका/गा.वि.स.</label><input type="text" name="t_municipality" class="form-control" required></div>
+              <div class="col-md-2"><label>वडा नं.</label><input type="text" name="t_ward" class="form-control" required></div>
+              <div class="col-md-3"><label>गाउँ</label><input type="text" name="t_town" class="form-control preeti-font"></div>
+              <div class="col-md-3"><label>टोल</label><input type="text" name="t_tole" class="form-control preeti-font"></div>
+              <div class="col-md-3"><label>सडक नं.</label><input type="text" name="t_street" class="form-control"></div>
+            </div>
+          </div>
+
+          <!-- Step 3: Family -->
+          <div class="form-step">
+            <div class="row g-3">
+              <div class="col-md-6"><label>हजुरबुवाको नाम</label><input type="text" name="grandfatherName" class="form-control preeti-font" required></div>
+              <div class="col-md-6"><label>हजुरआमाको नाम</label><input type="text" name="grandmotherName" class="form-control preeti-font"></div>
+              <div class="col-md-6"><label>बुवाको नाम</label><input type="text" name="fatherName" class="form-control preeti-font" required></div>
+              <div class="col-md-6"><label>आमाको नाम</label><input type="text" name="motherName" class="form-control preeti-font" required></div>
+              <div class="col-md-6 d-none" id="spouseField"><label>श्रीमान/श्रीमतीको नाम</label><input type="text" name="spouseName" class="form-control preeti-font"></div>
+              <div class="col-md-6"><label>छोराको नाम</label><input type="text" name="sonName" class="form-control preeti-font"></div>
+              <div class="col-md-6"><label>छोरीको नाम</label><input type="text" name="daughterName" class="form-control preeti-font"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="modal-footer justify-content-between">
+          <div>
+            <button type="button" class="btn btn-outline-secondary" id="prevBtn">Previous</button>
+            <button type="button" class="btn btn-outline-primary" id="nextBtn">Next</button>
+          </div>
+          <div>
+            <button type="submit" class="btn btn-success d-none" id="submitBtn">Save</button>
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script src="../../assets/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script>
+  const steps = document.querySelectorAll('.form-step');
+  let currentStep = 0;
+
+ function showStep(index) {
+  steps.forEach((step, i) => {
+    step.classList.toggle('active', i === index);
+  });
+
+  document.getElementById('prevBtn').disabled = index === 0;
+  document.getElementById('nextBtn').classList.toggle('d-none', index === steps.length - 1);
+  document.getElementById('submitBtn').classList.toggle('d-none', index !== steps.length - 1);
+
+  document.querySelectorAll('#formTabs .nav-link').forEach((tab, i) => {
+    tab.classList.toggle('active', i === index);
+  });
+
+  // ✅ Force scroll top of modal-body
+  const wrapper = document.getElementById('borrowerStepsWrapper');
+  if (wrapper) {
+    wrapper.scrollTop = 0;
+  }
+}
+
+
+
+  document.getElementById('nextBtn').addEventListener('click', () => {
+    if (currentStep < steps.length - 1) {
+      currentStep++;
+      showStep(currentStep);
+    }
+  });
+
+  document.getElementById('prevBtn').addEventListener('click', () => {
+    if (currentStep > 0) {
+      currentStep--;
+      showStep(currentStep);
+    }
+  });
+
+  document.querySelectorAll('#formTabs .nav-link').forEach(tab => {
+    tab.addEventListener('click', (e) => {
+      e.preventDefault();
+      currentStep = parseInt(tab.getAttribute('data-step'));
+      showStep(currentStep);
+    });
+  });
+
+  document.getElementById('copyAddress').addEventListener('change', function () {
+    const form = document.getElementById('borrowerForm');
+    ['country', 'province', 'district', 'municipality', 'ward', 'town', 'tole', 'street'].forEach(field => {
+      form['t_' + field].value = this.checked ? form['p_' + field].value : '';
+    });
+  });
+
+  document.getElementById('status').addEventListener('change', function () {
+    const spouseField = document.getElementById('spouseField');
+    if (this.value === 'Married') {
+      spouseField.classList.remove('d-none');
+      spouseField.querySelector('input').required = true;
+    } else {
+      spouseField.classList.add('d-none');
+      spouseField.querySelector('input').required = false;
+      spouseField.querySelector('input').value = '';
+    }
+  });
+
+  // Fixed BS to AD converter (rough logic, not accurate conversion)
+    // Convert BS to AD (subtract 56 years, 8 months, 6 days)
+  function convertBsToAd(bsDateStr) {
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(bsDateStr)) return;
+
+    const [bsYear, bsMonth, bsDay] = bsDateStr.split('-').map(Number);
+    let date = new Date(bsYear, bsMonth - 1, bsDay);
+    date.setFullYear(date.getFullYear() - 56);
+    date.setMonth(date.getMonth() - 8);
+    date.setDate(date.getDate() - 6);
+
+    const adStr = date.toISOString().split('T')[0];
+    document.getElementById('dob_ad').value = adStr;
+  }
+
+  // Convert AD to BS (add 56 years, 8 months, 6 days)
+  function convertAdToBs(adDateStr) {
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(adDateStr)) return;
+
+    const [adYear, adMonth, adDay] = adDateStr.split('-').map(Number);
+    let date = new Date(adYear, adMonth - 1, adDay);
+    date.setFullYear(date.getFullYear() + 56);
+    date.setMonth(date.getMonth() + 8);
+    date.setDate(date.getDate() + 6);
+
+    const yyyy = date.getFullYear();
+    const mm = String(date.getMonth() + 1).padStart(2, '0');
+    const dd = String(date.getDate()).padStart(2, '0');
+    document.getElementById('dob_bs').value = `${yyyy}-${mm}-${dd}`;
+  }
+
+  // Event listeners for both directions
+  document.getElementById('dob_bs').addEventListener('input', function () {
+    convertBsToAd(this.value);
+  });
+
+  document.getElementById('dob_ad').addEventListener('input', function () {
+    convertAdToBs(this.value);
+  });
+
+
+  document.getElementById('borrowerForm').addEventListener('submit', function (e) {
+    e.preventDefault();
+    const form = e.target;
+    const tbody = document.getElementById('summaryTableBody');
+
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td>${form.fullName.value}</td>
+      <td>${form.citizenshipNo.value}</td>
+      <td>${form.gender.value}</td>
+      <td>${form.fatherName.value}</td>
+      <td>
+        <button type="button" class="btn btn-sm btn-info btn-view"><i class="bi bi-eye"></i></button>
+        <button type="button" class="btn btn-sm btn-warning btn-edit"><i class="bi bi-pencil"></i></button>
+        <button type="button" class="btn btn-sm btn-danger btn-delete"><i class="bi bi-trash"></i></button>
+      </td>
+    `;
+    tbody.appendChild(tr);
+
+    document.getElementById('summarySection').classList.remove('d-none');
+    document.getElementById('emptySection').classList.add('d-none');
+
+    form.reset();
+    currentStep = 0;
+    showStep(currentStep);
+    bootstrap.Modal.getInstance(document.getElementById('borrowerModal')).hide();
+  });
+
+  document.getElementById('summaryTableBody').addEventListener('click', function (e) {
+    const row = e.target.closest('tr');
+    const form = document.getElementById('borrowerForm');
+
+    if (e.target.closest('.btn-delete')) {
+      row.remove();
+      if (this.children.length === 0) {
+        document.getElementById('summarySection').classList.add('d-none');
+        document.getElementById('emptySection').classList.remove('d-none');
+      }
+    }
+
+    if (e.target.closest('.btn-view')) {
+      alert("विवरण:\n" + row.innerText);
+    }
+
+    if (e.target.closest('.btn-edit')) {
+      form.fullName.value = row.cells[0].innerText;
+      form.citizenshipNo.value = row.cells[1].innerText;
+      form.gender.value = row.cells[2].innerText;
+      form.fatherName.value = row.cells[3].innerText;
+
+      currentStep = 0;
+      showStep(currentStep);
+      bootstrap.Modal.getOrCreateInstance(document.getElementById('borrowerModal')).show();
+
+      row.remove();
+    }
+  });
+
+  showStep(currentStep);
+</script>
+</body>
+</html>
+
+

@@ -1,0 +1,146 @@
+.profile-main-card {
+      border-left: 4px solid #7b145d;
+      transition: all 0.3s ease;
+    }
+    .profile-main-card:hover {
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+    .status-badge {
+      font-size: 0.8rem;
+      padding: 5px 10px;
+      border-radius: 20px;
+    }
+    .empty-data {
+      color: #6c757d;
+      font-style: italic;
+    }
+    .profile-avatar {
+      width: 80px;
+      height: 80px;
+      object-fit: cover;
+    }
+    .activity-timestamp {
+      font-size: 0.8rem;
+      color: #6c757d;
+    }
+    .flow-step {
+      position: relative;
+      padding-left: 30px;
+    }
+    .flow-step:before {
+      content: "";
+      position: absolute;
+      left: 10px;
+      top: 0;
+      height: 100%;
+      width: 2px;
+      background: #dee2e6;
+    }
+    .flow-step.active:before {
+      background: #7b145d;
+    }
+    .flow-step:last-child:before {
+      height: 50%;
+    }
+    .flow-step .step-icon {
+      position: absolute;
+      left: 0;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: #dee2e6;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.7rem;
+    }
+    .flow-step.active .step-icon {
+      background: #7b145d;
+      color: white;
+    }
+    .detail-card {
+      transition: transform 0.2s;
+    }
+    .detail-card:hover {
+      transform: translateY(-3px);
+    }
+    #borrowerFormContainer {
+      transition: all 0.3s ease;
+    }
+    .form-modified {
+      background-color: #fff8e1;
+    }
+    .action-buttons .btn {
+      margin-right: 5px;
+      margin-bottom: 5px;
+    }
+    /* Loader and Form Progress Styles */
+#loaderOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 9999;
+    display: none;
+    justify-content: center;
+    align-items: center;
+}
+
+.form-progress {
+    background-color: #f8f9fa;
+    padding: 1rem;
+    border-radius: 0.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.progress {
+    height: 10px;
+    background-color: #e9ecef;
+}
+
+.progress-bar {
+    background-color: #7b145d;
+    transition: width 0.3s ease;
+}
+
+.form-step {
+    display: none;
+}
+
+.form-step.active {
+    display: block;
+}
+
+
+.form-label {
+      color: #007bff;
+      font-weight: 500;
+    }
+    .form-control, .form-select {
+      border: 1px solid #007bff;
+    }
+    .form-control:focus, .form-select:focus {
+      border-color: #007bff;
+      box-shadow: 0 0 0 0.2rem rgba(0,123,255,.25);
+    }
+    .empty-data {
+      color: #6c757d;
+      font-style: italic;
+    }
+    /* Modal fixes */
+    .modal-xl {
+      max-width: 90vw;
+    }
+    .modal-body {
+      max-height: 65vh;
+      overflow-y: auto;
+    }
+    .modal-footer {
+      position: sticky;
+      bottom: 0;
+      background: #fff;
+      z-index: 2;
+      border-top: 1px solid #dee2e6;
+    }

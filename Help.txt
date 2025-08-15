@@ -1,0 +1,181 @@
+<!-- index.html -->
+<link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
+<link rel="stylesheet" href="assets/bootstrap-icons/bootstrap-icons.css">
+<script src="assets/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+
+
+<!-- pages/about.html -->
+<link rel="stylesheet" href="../assets/bootstrap/css/bootstrap.min.css">
+<link rel="stylesheet" href="../assets/bootstrap-icons/bootstrap-icons.css">
+<script src="../assets/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+
+
+Copy Tables Between Databases in MySQL via phpMyAdmin
+You have two easy options:
+
+🔹 Option 1: Use SQL in phpMyAdmin
+Go to phpMyAdmin.
+
+Click on the "SQL" tab for the das database.
+
+Run the following SQL:
+
+sql
+Copy
+Edit
+CREATE TABLE das.demoenglish AS
+SELECT * FROM customer_screening.demoenglish;
+
+CREATE TABLE das.demonepali AS
+SELECT * FROM customer_screening.demonepali;
+🔸 This will copy the table structure and data, but won’t copy indexes, primary keys, or foreign keys.
+
+
+
+
+
+<?php
+session_start();
+if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'maker') {
+    header("Location: ../login.php");
+    exit();
+}
+
+require_once "../../backend/db_connect.php";
+require_once "../../backend/auth_check.php";
+
+// Include database connection
+require_once "../../backend/db_connect.php";
+require_once "../../backend/auth_check.php";
+// Check if the user has the 'maker' role
+// This will redirect to login if the role is not allowed
+checkRole('maker'); // Only allow users with the 'maker' role
+// Set the session timeout duration (in seconds)
+$timeout_duration = 900; // 15 minutes
+
+// Check if "LAST_ACTIVITY" is set in the session
+if (isset($_SESSION['LAST_ACTIVITY'])) {
+    // Calculate time since last activity
+    $time_inactive = time() - $_SESSION['LAST_ACTIVITY'];
+    
+    // If the time inactive is greater than timeout duration, log out
+    if ($time_inactive > $timeout_duration) {
+        session_unset(); // remove session variables
+        session_destroy(); // destroy the session
+        header("Location: login.php?message=Session expired. Please log in again.");
+        exit();
+    }
+}
+
+
+
+// Get customer ID from URL
+$customer_id = isset($_GET['id']) ? $_GET['id'] : null;
+
+if (!$customer_id) {
+    header("Location: maker_dashboard.php");
+    exit();
+}
+
+// Fetch customer details
+$customer_query = "SELECT * FROM customers WHERE customer_id = '$customer_id'";
+$customer_result = mysqli_query($conn, $customer_query);
+$customer = mysqli_fetch_assoc($customer_result);
+
+if (!$customer) {
+    header("Location: maker_dashboard.php");
+    exit();
+}
+
+// Fetch address details
+$address_query = "SELECT * FROM customer_addresses WHERE customer_id = '$customer_id'";
+$address_result = mysqli_query($conn, $address_query);
+$addresses = [];
+while ($row = mysqli_fetch_assoc($address_result)) {
+    $addresses[$row['address_type']] = $row;
+}
+
+// Record view activity
+$user_id = $_SESSION['user_id'];
+$activity_query = "INSERT INTO activity_log (user_id, customer_id, action, description) 
+                   VALUES ($user_id, '$customer_id', 'view', 'Viewed customer profile')";
+mysqli_query($conn, $activity_query);
+
+// Fetch recent activities
+$activities_query = "SELECT al.*, u.username 
+                     FROM activity_log al
+                     JOIN users u ON al.user_id = u.id
+                     WHERE al.customer_id = '$customer_id'
+                     ORDER BY al.created_at DESC LIMIT 5";
+$activities_result = mysqli_query($conn, $activities_query);
+$activities = [];
+while ($row = mysqli_fetch_assoc($activities_result)) {
+    $activities[] = $row;
+}
+?>
+
+
+
+
+
+ajax
+document.addEventListener('DOMContentLoaded', function () {
+  const provinceSelect = document.getElementById('perm_province');
+  const districtSelect = document.getElementById('perm_district');
+  const municipalitySelect = document.getElementById('perm_municipality');
+  const wardSelect = document.getElementById('perm_ward');
+
+  // Fetch provinces on load
+  fetch('frontend/maker_a/get_address_data.php?type=province')
+    .then(res => res.json())
+    .then(data => {
+      provinceSelect.innerHTML = `<option value="">Select Province</option>`;
+      data.forEach(p => {
+        provinceSelect.innerHTML += `<option value="${p}">${p}</option>`;
+      });
+    });
+
+  // On province change → load districts
+  provinceSelect.addEventListener('change', function () {
+    const province = this.value;
+    districtSelect.innerHTML = `<option>Loading...</option>`;
+    fetch(`get_address_data.php?type=district&province=${province}`)
+      .then(res => res.json())
+      .then(data => {
+        districtSelect.innerHTML = `<option value="">Select District</option>`;
+        data.forEach(d => {
+          districtSelect.innerHTML += `<option value="${d}">${d}</option>`;
+        });
+      });
+  });
+
+  // On district change → load municipalities
+  districtSelect.addEventListener('change', function () {
+    const district = this.value;
+    municipalitySelect.innerHTML = `<option>Loading...</option>`;
+    fetch(`get_address_data.php?type=municipality&district=${district}`)
+      .then(res => res.json())
+      .then(data => {
+        municipalitySelect.innerHTML = `<option value="">Select Municipality</option>`;
+        data.forEach(m => {
+          municipalitySelect.innerHTML += `<option value="${m}">${m}</option>`;
+        });
+      });
+  });
+
+  // On municipality change → load ward count
+  municipalitySelect.addEventListener('change', function () {
+    const municipality = this.value;
+    wardSelect.innerHTML = `<option>Loading...</option>`;
+    fetch(`get_address_data.php?type=ward&municipality=${municipality}`)
+      .then(res => res.json())
+      .then(data => {
+        wardSelect.innerHTML = `<option value="">Select Ward</option>`;
+        data.forEach(w => {
+          wardSelect.innerHTML += `<option value="${w}">${w}</option>`;
+        });
+      });
+  });
+});
