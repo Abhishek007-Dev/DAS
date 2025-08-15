@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="ne">
+<head>
+  <meta charset="UTF-8">
+  <title>Collateral Details</title>
+ <link rel="stylesheet" href="../../assets/bootstrap/css/bootstrap.min.css">
+  <link rel="stylesheet" href="../../assets/bootstrap-icons/bootstrap-icons.css">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Noto Sans Devanagari', sans-serif;
+    }
+
+
+    @font-face {
+    font-family: 'Preeti';
+    src: url('../../assets/fonts/Preeti.otf') format('truetype');
+     font-size: 20px;
+    padding: 8px;
+  }
+
+  .preeti-font {
+    font-family: 'Preeti', sans-serif;
+  }
+    .form-step { display: none; }
+    .form-step.active { display: block; }
+    .nav-tabs .nav-link.active {
+      background-color: #0d6efd;
+      color: white;
+    }
+    .input-group-text { min-width: 120px; }
+    .form-control, .form-select { min-height: 38px; }
+    table th, table td { vertical-align: middle !important; }
+    .modal-content {
+      background: linear-gradient(135deg, #e0f7fa, #f1f8e9);
+    }
+    label { font-weight: 500; }
+  </style>
+</head>
+<body>
+<div class="container mt-4">
+  <div class="card">
+    <div class="card-header d-flex justify-content-between align-items-center">
+      <h5 class="mb-0"><i class="bi bi-shield-lock me-2"></i>Security/Collateral Details</h5>
+      <button class="btn btn-outline-primary btn-sm" data-bs-toggle="modal" data-bs-target="#collateralModal">
+        <i class="bi bi-plus-lg"></i> Add Collateral
+      </button>
+    </div>
+    <div class="card-body">
+      <div id="noCollateral" class="text-center text-muted">No collateral added yet.</div>
+      <div id="collateralTableSection" class="d-none">
+        <table class="table table-bordered table-striped">
+          <thead class="table-light">
+            <tr>
+              <th>Type</th>
+              <th>Location</th>
+              <th>Owner</th>
+              <th>Area</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="collateralTableBody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Collateral Modal -->
+<div class="modal fade" id="collateralModal" tabindex="-1">
+  <div class="modal-dialog modal-lg modal-dialog-scrollable">
+    <div class="modal-content">
+      <form id="collateralForm">
+        <div class="modal-header">
+          <h5 class="modal-title">Add Collateral</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+
+          <div class="mb-3">
+            <label class="form-label">Collateral Type</label>
+            <select id="collateralType" class="form-select" required>
+              <option value="">Select</option>
+              <option value="Land">Land</option>
+              <option value="FD">FD Receipt</option>
+              <option value="Shares">Shares</option>
+              <option value="Debentures">Debentures</option>
+            </select>
+          </div>
+
+          <!-- Land Fields -->
+          <div id="landFields" class="d-none">
+            <div class="row g-3">
+              <div class="col-md-4"><label>Province</label><input type="text" name="province" class="form-control" required></div>
+              <div class="col-md-4"><label>District</label><input type="text" name="district" class="form-control" required></div>
+              <div class="col-md-4"><label>Municipality/VDC</label><input type="text" name="municipality" class="form-control" required></div>
+              <div class="col-md-2"><label>Wada No.</label><input type="text" name="wada_no" class="form-control" required></div>
+              <div class="col-md-2"><label>Sheet No.</label><input type="text" name="sheet_no" class="form-control"></div>
+              <div class="col-md-2"><label>Kitta No.</label><input type="text" name="kitta_no" class="form-control"></div>
+              <div class="col-md-3"><label>Area (sq.ft.)</label><input type="text" name="area" class="form-control" required></div>
+              <div class="col-md-3"><label>Malpot Office</label><input type="text" name="malpot" class="form-control" required></div>
+              <div class="col-md-6">
+                <label>Registered Owner</label>
+                <select name="owner" class="form-select" required>
+                  <option value="">Select</option>
+                  <option value="Borrower">Borrower (Self)</option>
+                  <option value="Guarantor">Guarantor</option>
+                  <option value="Other">Other</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <!-- Future Collateral Types -->
+          <div id="fdFields" class="d-none text-muted mt-3">
+            FD Receipt form will be added later.
+          </div>
+          <div id="sharesFields" class="d-none text-muted mt-3">
+            Shares form will be added later.
+          </div>
+          <div id="debentureFields" class="d-none text-muted mt-3">
+            Debentures form will be added later.
+          </div>
+
+        </div>
+        <div class="modal-footer justify-content-between">
+          <button type="submit" class="btn btn-success">Save</button>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+
+<script src="../../assets/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script>
+  const collateralTypeSelect = document.getElementById('collateralType');
+  const landFields = document.getElementById('landFields');
+  const fdFields = document.getElementById('fdFields');
+  const sharesFields = document.getElementById('sharesFields');
+  const debentureFields = document.getElementById('debentureFields');
+
+  collateralTypeSelect.addEventListener('change', function () {
+    const value = this.value;
+
+    landFields.classList.toggle('d-none', value !== 'Land');
+    fdFields.classList.toggle('d-none', value !== 'FD');
+    sharesFields.classList.toggle('d-none', value !== 'Shares');
+    debentureFields.classList.toggle('d-none', value !== 'Debentures');
+  });
+
+  document.getElementById('collateralForm').addEventListener('submit', function (e) {
+    e.preventDefault();
+
+    const type = collateralTypeSelect.value;
+    if (type === 'Land') {
+      const form = e.target;
+      const tbody = document.getElementById('collateralTableBody');
+
+      const row = document.createElement('tr');
+      row.innerHTML = `
+        <td>${type}</td>
+        <td>${form.province.value}, ${form.district.value}, ${form.municipality.value}</td>
+        <td>${form.owner.value}</td>
+        <td>${form.area.value}</td>
+        <td>
+          <button class="btn btn-sm btn-danger">Delete</button>
+        </td>
+      `;
+      tbody.appendChild(row);
+
+      document.getElementById('collateralTableSection').classList.remove('d-none');
+      document.getElementById('noCollateral').classList.add('d-none');
+      form.reset();
+      landFields.classList.add('d-none');
+      bootstrap.Modal.getInstance(document.getElementById('collateralModal')).hide();
+    }
+  });
+
+  // Optional: Delete row
+  document.getElementById('collateralTableBody').addEventListener('click', function (e) {
+    if (e.target.closest('.btn-danger')) {
+      e.target.closest('tr').remove();
+      if (this.children.length === 0) {
+        document.getElementById('collateralTableSection').classList.add('d-none');
+        document.getElementById('noCollateral').classList.remove('d-none');
+      }
+    }
+  });
+</script>
+
+</body>
+</html>
+
+

@@ -1,0 +1,74 @@
+body {
+      background: linear-gradient(135deg, #e6ecf0 0%, #f7e7fa 50%, #e0e7ff 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      padding: 20px;
+    }
+
+    .center-wrapper {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .title {
+      font-size: 44px;
+      font-weight: bold;
+      color: #29006e;
+      text-align: center;
+      margin-bottom: 35px;
+      text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.1);
+    }
+
+    .login-container {
+      background: linear-gradient(120deg, #fff 80%, #f3e6f9 100%);
+      padding: 50px 40px;
+      border-radius: 20px;
+      box-shadow: 0 8px 32px rgba(44, 0, 68, 0.12), 0 1.5px 8px rgba(44, 0, 68, 0.08);
+      width: 100%;
+      max-width: 480px;
+    }
+
+    .form-control:focus {
+      box-shadow: none;
+      border-color: #7b145d;
+    }
+
+    .btn-gradient {
+      background: linear-gradient(90deg, #c0264c, #7b145d 48.21%, #29006e);
+      border: none;
+      color: white;
+    }
+
+    .btn-gradient:hover {
+      opacity: 0.95;
+    }
+
+    .form-text {
+      font-size: 0.9rem;
+      color: #6c757d;
+    }
+
+    .copyright-text {
+      margin-top: 18px;
+      text-align: center;
+      color: #7b145d;
+      font-size: 16px;
+      font-weight: 500;
+      letter-spacing: 1px;
+    }
+
+    @media (max-width: 500px) {
+      .title {
+        font-size: 26px;
+      }
+
+      .login-container {
+        padding: 35px 25px;
+      }
+    }

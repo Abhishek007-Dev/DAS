@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="ne">
+<head>
+  <meta charset="UTF-8">
+  <title>Loan Details</title>
+ <link rel="stylesheet" href="../../assets/bootstrap/css/bootstrap.min.css">
+  <link rel="stylesheet" href="../../assets/bootstrap-icons/bootstrap-icons.css">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Noto Sans Devanagari', sans-serif;
+    }
+
+
+    @font-face {
+    font-family: 'Preeti';
+    src: url('../../assets/fonts/Preeti.otf') format('truetype');
+     font-size: 20px;
+    padding: 8px;
+  }
+
+  .preeti-font {
+    font-family: 'Preeti', sans-serif;
+  }
+    .form-step { display: none; }
+    .form-step.active { display: block; }
+    .nav-tabs .nav-link.active {
+      background-color: #0d6efd;
+      color: white;
+    }
+    .input-group-text { min-width: 120px; }
+    .form-control, .form-select { min-height: 38px; }
+    table th, table td { vertical-align: middle !important; }
+    .modal-content {
+      background: linear-gradient(135deg, #e0f7fa, #f1f8e9);
+    }
+    label { font-weight: 500; }
+  </style>
+</head>
+<body>
+
+
+<div class="container mt-4">
+  <div class="card">
+    <div class="card-header d-flex justify-content-between align-items-center">
+      <h5 class="mb-0"><i class="bi bi-cash-stack me-2"></i>Loan Details</h5>
+      <button class="btn btn-outline-primary btn-sm" data-bs-toggle="modal" data-bs-target="#loanModal">
+        <i class="bi bi-plus-lg"></i> Add Loan
+      </button>
+    </div>
+    <div class="card-body">
+      <div id="noLoan" class="text-center text-muted">No loan details added yet.</div>
+      <div id="loanTableSection" class="d-none">
+        <table class="table table-bordered table-striped">
+          <thead class="table-light">
+            <tr>
+              <th>Loan Type</th>
+              <th>Purpose</th>
+              <th>Limit</th>
+              <th>Rate (%)</th>
+              <th>Amount</th>
+              <th>Tenure</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="loanTableBody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Loan Modal -->
+<div class="modal fade" id="loanModal" tabindex="-1">
+  <div class="modal-dialog modal-lg modal-dialog-scrollable">
+    <div class="modal-content">
+      <form id="loanForm">
+        <div class="modal-header">
+          <h5 class="modal-title">Add Loan Details</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <div class="row g-3">
+            <div class="col-md-4">
+              <label>Loan Type</label>
+              <select name="loanType" class="form-select" required>
+                <option value="">Select</option>
+                <option>Personal</option>
+                <option>Home</option>
+                <option>Business</option>
+                <option>Education</option>
+              </select>
+            </div>
+            <div class="col-md-4">
+              <label>Loan Purpose</label>
+              <input type="text" name="loanPurpose" class="form-control" required>
+            </div>
+            <div class="col-md-4">
+              <label>Loan Limit (Rs.)</label>
+              <input type="number" name="loanLimit" class="form-control" required>
+            </div>
+            <div class="col-md-4">
+              <label>Interest Rate (%)</label>
+              <input type="number" step="0.01" name="interestRate" class="form-control" required>
+            </div>
+            <div class="col-md-4">
+              <label>Loan Amount (Rs.)</label>
+              <input type="number" name="loanAmount" class="form-control" required>
+            </div>
+            <div class="col-md-4">
+              <label>Approved Date</label>
+              <input type="date" name="approvedDate" class="form-control" required>
+            </div>
+            <div class="col-md-4">
+              <label>Tenure (in months)</label>
+              <input type="number" name="tenure" class="form-control" required>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer justify-content-between">
+          <button type="submit" class="btn btn-success">Save</button>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+<script src="../../assets/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script>
+  document.getElementById('loanForm').addEventListener('submit', function (e) {
+    e.preventDefault();
+
+    const form = e.target;
+    const tbody = document.getElementById('loanTableBody');
+
+    const row = document.createElement('tr');
+    row.innerHTML = `
+      <td>${form.loanType.value}</td>
+      <td>${form.loanPurpose.value}</td>
+      <td>${form.loanLimit.value}</td>
+      <td>${form.interestRate.value}</td>
+      <td>${form.loanAmount.value}</td>
+      <td>${form.tenure.value} months</td>
+      <td>
+        <button type="button" class="btn btn-sm btn-danger btn-delete"><i class="bi bi-trash"></i></button>
+      </td>
+    `;
+
+    tbody.appendChild(row);
+
+    document.getElementById('loanTableSection').classList.remove('d-none');
+    document.getElementById('noLoan').classList.add('d-none');
+
+    form.reset();
+    bootstrap.Modal.getInstance(document.getElementById('loanModal')).hide();
+  });
+
+  // Delete row
+  document.getElementById('loanTableBody').addEventListener('click', function (e) {
+    if (e.target.closest('.btn-delete')) {
+      e.target.closest('tr').remove();
+      if (this.children.length === 0) {
+        document.getElementById('loanTableSection').classList.add('d-none');
+        document.getElementById('noLoan').classList.remove('d-none');
+      }
+    }
+  });
+</script>
+
+</body>
+</html>
